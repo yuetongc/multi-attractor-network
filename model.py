@@ -5,7 +5,7 @@ import numpy as np
 
 
 class MultiAttractorModel:
-    def __init__(self, N, max_rate=100, tau_membrane=10, tau_noise=50):
+    def __init__(self, N, max_rate=100, tau_membrane=10, tau_noise=50, t_int=0.1):
         self.N = N
         self.max_rate = max_rate
         self.tau_membrane = tau_membrane
@@ -13,6 +13,7 @@ class MultiAttractorModel:
         self.W = self.build_weight_matrix()
         self.noise_cov = self.build_noise_cov()
         self.cov_term = self.noise_cov_term()
+        self.t_int = t_int
 
     def build_weight_matrix(self, W_avg=-40, W_mod=33):
         N_matrix = np.reshape(np.repeat(np.arange(self.N), self.N), (self.N, self.N))
@@ -45,15 +46,15 @@ class MultiAttractorModel:
     def init_noise(self):
         return np.random.multivariate_normal(np.zeros(self.N), self.noise_cov)
 
-    def ornstein_uhlenbeck_process(self, noise, t_int):
+    def ornstein_uhlenbeck_process(self, noise):
         ind_rv = np.random.multivariate_normal(np.zeros(self.N), np.identity(self.N))
-        step = (-noise * t_int + np.matmul(self.cov_term, ind_rv * math.sqrt(t_int))) / self.tau_noise
+        step = (-noise * self.t_int + np.matmul(self.cov_term, ind_rv * math.sqrt(self.t_int))) / self.tau_noise
         noise = noise + step
         return noise
 
-    def sim(self, V, noise, t_int, c):
+    def update(self, V, noise, c):
         h = self.external_input(c)
         r = self.momentary_firing_rate(V)
         step = (-V + h + noise + np.matmul(self.W, r)) / self.tau_membrane
-        V = V + step * t_int
+        V = V + step * self.t_int
         return V
