@@ -56,7 +56,7 @@ for run in range(N_run):
 fig, ax = plt.subplots()
 ax.plot(t, running_avg_var)
 ax.set_xticks([rest_time1, rest_time1+stim_time])
-ax.set_xticklabels(['stimulus starts', 'stimulus ends'])
+ax.set_xticklabels(['stimulus ON', 'stimulus OFF'])
 ax.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='yellow')
 ax.set_ylabel('$\sqrt{Var(V)}$')
 plt.show()
