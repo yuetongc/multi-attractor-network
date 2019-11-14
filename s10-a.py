@@ -52,7 +52,7 @@ for i in range(N_trail):
         val2[i, c] = V[25]
         val3[i, c] = V[0]
         c += 1
-    print("end of {}th run, took {} seconds".format(str(i+1), time.time() - running_time))
+    print("{}th run finished, took {} seconds".format(str(i+1), time.time() - running_time))
 
 
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
@@ -60,18 +60,27 @@ fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
 for i in range(N_trail):
     ax1.plot(t, val1[i], color='blue')
 ax1.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='yellow')
-ax1.set_ylabel(r'$V_{stim}$')
+ax1.spines['top'].set_visible(False)
+ax1.spines['bottom'].set_visible(False)
+ax1.spines['right'].set_visible(False)
+ax1.set_ylabel(r'$V_{stim}$/mV')
 
 for i in range(N_trail):
     ax2.plot(t, val2[i], color='blue')
 ax2.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='yellow')
-ax2.set_ylabel(r'$V_{orth}$')
+ax2.spines['top'].set_visible(False)
+ax2.spines['bottom'].set_visible(False)
+ax2.spines['right'].set_visible(False)
+ax2.set_ylabel(r'$V_{orth}$/mV')
 
 for i in range(N_trail):
     ax3.plot(t, val3[i], color='blue')
 ax3.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='yellow')
+ax3.spines['top'].set_visible(False)
+ax3.spines['bottom'].set_visible(False)
+ax3.spines['right'].set_visible(False)
+ax3.set_ylabel(r'$V_{opp}$/mV')
 ax3.set_xlabel('t/ms')
-ax3.set_ylabel(r'$V_{opp}$')
 
 plt.tight_layout()
 plt.show()
