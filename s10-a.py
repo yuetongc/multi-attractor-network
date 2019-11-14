@@ -6,8 +6,6 @@ import model
 N_neuron = 100
 
 attractor_model = model.MultiAttractorModel(N=N_neuron)
-V = attractor_model.init_voltage()
-noise = attractor_model.init_noise()
 
 t_int = attractor_model.t_int
 rest_time1 = 500
@@ -24,6 +22,8 @@ val3 = np.zeros([N_trail, N_point])
 
 for i in range(N_trail):
     running_time = time.time()
+    V = attractor_model.init_voltage()
+    noise = attractor_model.init_noise()
     c = 0
     for j in range(int(rest_time1/t_int)):
         V_in = V
