@@ -8,6 +8,7 @@ N_neuron = 100
 attractor_model = model.MultiAttractorModel(N=N_neuron)
 
 t_int = attractor_model.t_int
+prep_time = 300
 rest_time1 = 500
 stim_time = 1000
 rest_time2 = 800
@@ -24,6 +25,11 @@ for i in range(N_trail):
     running_time = time.time()
     V = attractor_model.init_voltage()
     noise = attractor_model.init_noise()
+    for j in range(int(prep_time / t_int)):
+        V_in = V
+        noise_in = attractor_model.ornstein_uhlenbeck_process(noise)
+        V = attractor_model.update(V_in, noise, 0)
+        noise = noise_in
     c = 0
     for j in range(int(rest_time1/t_int)):
         V_in = V
@@ -63,7 +69,7 @@ ax1.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='yellow')
 ax1.spines['top'].set_visible(False)
 ax1.spines['bottom'].set_visible(False)
 ax1.spines['right'].set_visible(False)
-ax1.set_ylabel(r'$V_{stim}$/mV')
+ax1.set_ylabel(r'$V_{stim}$ / mV')
 
 for i in range(N_trail):
     ax2.plot(t, val2[i], color='blue')
@@ -71,7 +77,7 @@ ax2.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='yellow')
 ax2.spines['top'].set_visible(False)
 ax2.spines['bottom'].set_visible(False)
 ax2.spines['right'].set_visible(False)
-ax2.set_ylabel(r'$V_{orth}$/mV')
+ax2.set_ylabel(r'$V_{orth}$ / mV')
 
 for i in range(N_trail):
     ax3.plot(t, val3[i], color='blue')
