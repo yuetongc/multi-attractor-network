@@ -18,7 +18,7 @@ t = np.arange(0, total_time, t_int)
 N_point = int(total_time/t_int)
 
 N_stim = 4
-N_trial = 20
+N_trial = 30
 
 var_matrix = np.zeros([N_stim, N_point])
 for k in range(N_stim):
