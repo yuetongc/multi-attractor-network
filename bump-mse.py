@@ -19,6 +19,7 @@ rest_time1 = 500
 stim_time = 1000
 rest_time2 = 800
 total_time = rest_time1 + stim_time + rest_time2
+t = np.arange(0, total_time, t_int)
 
 N_point = int(total_time/t_int)
 
@@ -103,20 +104,20 @@ plt.subplots_adjust(top=0.88)
 plt.show()
 
 fig2, (ax1, ax2, ax3) = plt.subplots(3, 1)
-ax1.plot(p_matrix[0])
-ax1.axvspan(rest_time1/t_int, (rest_time1+stim_time)/t_int, alpha=0.5, color='yellow')
+ax1.plot(t, p_matrix[0])
+ax1.axvspan(rest_time1, rest_time1+stim_time, alpha=0.5, color='yellow')
 ax1.spines['top'].set_visible(False)
 ax1.spines['bottom'].set_visible(False)
 ax1.spines['right'].set_visible(False)
 ax1.set_ylabel('a')
-ax2.plot(p_matrix[1])
-ax2.axvspan(rest_time1/t_int, (rest_time1+stim_time)/t_int, alpha=0.5, color='yellow')
+ax2.plot(t, p_matrix[1])
+ax2.axvspan(rest_time1, rest_time1+stim_time, alpha=0.5, color='yellow')
 ax2.spines['top'].set_visible(False)
 ax2.spines['bottom'].set_visible(False)
 ax2.spines['right'].set_visible(False)
 ax2.set_ylabel(r'$\mu$')
-ax3.plot(np.exp(p_matrix[2]))
-ax3.axvspan(rest_time1/t_int, (rest_time1+stim_time)/t_int, alpha=0.5, color='yellow')
+ax3.plot(t, np.exp(p_matrix[2]))
+ax3.axvspan(rest_time1, rest_time1+stim_time, alpha=0.5, color='yellow')
 ax3.spines['top'].set_visible(False)
 ax3.spines['bottom'].set_visible(False)
 ax3.spines['right'].set_visible(False)
