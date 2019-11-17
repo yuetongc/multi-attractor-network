@@ -27,6 +27,7 @@ V_matrix = np.zeros([N_neuron, N_point])
 
 N_params = 3
 p_est = np.array([2., 1., 0.])
+p_bounds = ((0, 5), (-5, 5), (-5, 5))
 p_matrix = np.zeros([N_params, N_point])
 est_matrix = np.zeros([N_neuron, N_point])
 
@@ -47,7 +48,7 @@ for i in range(int(rest_time1/t_int)):
     V = attractor_model.update(V_in, noise, 0)
     noise = noise_in
     V_matrix[:, c] = V
-    est = minimize(modelfit.mse_fv, p_est, args=(ang_vector, V))
+    est = minimize(modelfit.mse_fv, p_est, args=(ang_vector, V), bounds=p_bounds)
     p_est = est.x
     p_matrix[:, c] = p_est
     est_matrix[:, c] = modelfit.f_v(ang_vector, p_est)
@@ -61,7 +62,7 @@ for i in range(int(stim_time/t_int)):
     V = attractor_model.update(V_in, noise, 2)
     noise = noise_in
     V_matrix[:, c] = V
-    est = minimize(modelfit.mse_fv, p_est, args=(ang_vector, V))
+    est = minimize(modelfit.mse_fv, p_est, args=(ang_vector, V), bounds=p_bounds)
     p_est = est.x
     p_matrix[:, c] = p_est
     est_matrix[:, c] = modelfit.f_v(ang_vector, p_est)
@@ -75,7 +76,7 @@ for i in range(int(rest_time2/t_int)):
     V = attractor_model.update(V_in, noise, 0)
     noise = noise_in
     V_matrix[:, c] = V
-    est = minimize(modelfit.mse_fv, p_est, args=(ang_vector, V))
+    est = minimize(modelfit.mse_fv, p_est, args=(ang_vector, V), bounds=p_bounds)
     p_est = est.x
     p_matrix[:, c] = p_est
     est_matrix[:, c] = modelfit.f_v(ang_vector, p_est)
