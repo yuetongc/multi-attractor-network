@@ -8,10 +8,7 @@ N_neuron = 100
 attractor_model = model.MultiAttractorModel(N=N_neuron)
 
 t_int = attractor_model.t_int
-prep_time = 300
-rest_time1 = 500
-stim_time = 1000
-rest_time2 = 800
+prep_time, rest_time1, stim_time, rest_time2 = 300, 500, 1000, 800
 total_time = rest_time1 + stim_time + rest_time2
 t = np.arange(0, total_time, t_int)
 N_point = int(total_time/t_int)
@@ -64,29 +61,32 @@ for i in range(N_trail):
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
 
 for i in range(N_trail):
-    ax1.plot(t, val1[i], color='blue')
-ax1.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='yellow')
+    ax1.plot(t, val1[i], color='black')
+ax1.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='lightgrey')
 ax1.spines['top'].set_visible(False)
 ax1.spines['bottom'].set_visible(False)
 ax1.spines['right'].set_visible(False)
-ax1.set_ylabel(r'$V_{stim}$ / mV')
+ax1.set_ylabel(r'$V_{stim}$ / mV', fontsize=14)
+ax1.tick_params(labelsize=12)
 
 for i in range(N_trail):
-    ax2.plot(t, val2[i], color='blue')
-ax2.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='yellow')
+    ax2.plot(t, val2[i], color='black')
+ax2.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='lightgrey')
 ax2.spines['top'].set_visible(False)
 ax2.spines['bottom'].set_visible(False)
 ax2.spines['right'].set_visible(False)
-ax2.set_ylabel(r'$V_{orth}$ / mV')
+ax2.set_ylabel(r'$V_{orth}$ / mV', fontsize=14)
+ax2.tick_params(labelsize=12)
 
 for i in range(N_trail):
-    ax3.plot(t, val3[i], color='blue')
-ax3.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='yellow')
+    ax3.plot(t, val3[i], color='black')
+ax3.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='lightgrey')
 ax3.spines['top'].set_visible(False)
 ax3.spines['bottom'].set_visible(False)
 ax3.spines['right'].set_visible(False)
-ax3.set_ylabel(r'$V_{opp}$ / mV')
-ax3.set_xlabel('t / ms')
+ax3.set_ylabel(r'$V_{opp}$ / mV', fontsize=14)
+ax3.set_xlabel('t / ms', fontsize=14)
+ax3.tick_params(labelsize=12)
 
 plt.tight_layout()
 plt.show()
