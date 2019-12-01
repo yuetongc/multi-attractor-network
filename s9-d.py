@@ -9,10 +9,7 @@ V = attractor_model.init_voltage()
 noise = attractor_model.init_noise()
 
 t_int = attractor_model.t_int
-prep_time = 300
-rest_time1 = 500
-stim_time = 1000
-rest_time2 = 800
+prep_time, rest_time1, stim_time, rest_time2 = 300, 500, 1000, 800
 total_time = rest_time1 + stim_time + rest_time2
 N_point = int(total_time/t_int)
 
