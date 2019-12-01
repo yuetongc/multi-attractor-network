@@ -15,22 +15,22 @@ ang_vector = np.arange(-math.pi, math.pi, 2 * math.pi / N_neuron)
 
 t_int = attractor_model.t_int
 prep_time, rest_time1, stim_time, rest_time2 = 300, 500, 1000, 800
-n0, n1, n2, n3 = int(prep_time/t_int), int(rest_time1/t_int), int((rest_time1+stim_time)/t_int), \
-                 int((rest_time1+stim_time+rest_time2)/t_int)
-t = np.arange(0, rest_time1+stim_time+rest_time2, t_int)
+t0, t1, t2, t3 = prep_time, rest_time1, rest_time1+stim_time, rest_time1+stim_time+rest_time2
+n0, n1, n2, n3 = int(t0/t_int), int(t1/t_int), int(t2/t_int), int(t3/t_int)
+t = np.arange(0, t3, t_int)
 N_point = n3
 
 V_matrix = np.zeros([N_neuron, N_point])
 
-time0 = time.time()
+timer0 = time.time()
 for i in range(n0):
     V_in = V
     noise_in = attractor_model.ornstein_uhlenbeck_process(noise)
     V = attractor_model.update(V_in, noise, 0)
     noise = noise_in
-print("end of prep phase, took {} seconds".format(time.time() - time0))
+print("end of prep phase, took {} seconds".format(time.time() - timer0))
 c = 0
-time1 = time.time()
+timer1 = time.time()
 for i in range(n1):
     V_in = V
     noise_in = attractor_model.ornstein_uhlenbeck_process(noise)
@@ -52,7 +52,7 @@ for i in range(n3-n2):
     noise = noise_in
     V_matrix[:, c] = V
     c += 1
-print("end of simulation, took {} seconds".format(time.time() - time1))
+print("end of simulation, took {} seconds".format(time.time() - timer1))
 
 
 N_params = 4
@@ -125,9 +125,12 @@ r2 = []
 for i in range(n3):
     r2.append(modelfit.r_squared(V_matrix[:, i], est_matrix[:, i]))
 
+r_tot = []
+for i in range(n3):
+    r_tot.append(modelfit.firing_rate_app(est_matrix[:, i]))
 
 fig1, (ax1, ax2) = plt.subplots(2, 1)
-im1 = ax1.imshow(V_matrix, interpolation='nearest', aspect='auto', extent=(0, int(n3*t_int), -180, 180))
+im1 = ax1.imshow(V_matrix, interpolation='nearest', aspect='auto', extent=(0, t3, -180, 180))
 ax1.spines['top'].set_visible(False)
 ax1.spines['bottom'].set_visible(False)
 ax1.spines['right'].set_visible(False)
@@ -136,7 +139,7 @@ ax1.set_ylabel(r'PO / $\degree$', fontsize=14)
 ax1.set_yticks([-180, 0, 180])
 ax1.tick_params(labelsize=12)
 fig1.colorbar(im1, ax=ax1)
-im2 = ax2.imshow(est_matrix, interpolation='nearest', aspect='auto', extent=(0, int(n3*t_int), -180, 180))
+im2 = ax2.imshow(est_matrix, interpolation='nearest', aspect='auto', extent=(0, t3, -180, 180))
 ax2.spines['top'].set_visible(False)
 ax2.spines['bottom'].set_visible(False)
 ax2.spines['right'].set_visible(False)
@@ -151,9 +154,9 @@ plt.subplots_adjust(top=0.88)
 plt.show()
 
 fig2, ax = plt.subplots()
-ax.plot(np.linspace(-180, 180, N_neuron), V_matrix[:, n1-int(1/t_int)], linestyle='--', marker='o',
+ax.plot(np.linspace(-180, 180, N_neuron), V_matrix[:, n1-int(50/t_int)], linestyle='--', marker='o',
         markersize=2, color='black', label='actual')
-ax.plot(np.linspace(-180, 180, N_neuron), est_matrix[:, n1-int(1/t_int)], color='steelblue', label='fitted')
+ax.plot(np.linspace(-180, 180, N_neuron), est_matrix[:, n1-int(50/t_int)], color='steelblue', label='fitted')
 ax.legend(frameon=False)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
@@ -163,10 +166,9 @@ ax.tick_params(labelsize=12)
 plt.show()
 
 fig3, ax = plt.subplots()
-ax.plot(np.linspace(-180, 180, N_neuron), V_matrix[:, n2-int(1/t_int)], linestyle='--',
+ax.plot(np.linspace(-180, 180, N_neuron), V_matrix[:, n2-int(50/t_int)], linestyle='--',
         marker='o', markersize=2, color='black', label='actual')
-ax.plot(np.linspace(-180, 180, N_neuron), est_matrix[:, n2-int(1/t_int)], color='steelblue',
-        label='fitted')
+ax.plot(np.linspace(-180, 180, N_neuron), est_matrix[:, n2-int(50/t_int)], color='steelblue', label='fitted')
 ax.legend(frameon=False)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
@@ -176,38 +178,59 @@ ax.tick_params(labelsize=12)
 plt.show()
 
 fig4, ax = plt.subplots()
-ax.plot(t, r2)
+ax.plot(np.linspace(-180, 180, N_neuron), V_matrix[:, n2+int(50/t_int)], linestyle='--',
+        marker='o', markersize=2, color='black', label='actual')
+ax.plot(np.linspace(-180, 180, N_neuron), est_matrix[:, n2+int(50/t_int)], color='steelblue', label='fitted')
+ax.legend(frameon=False)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-ax.set_ylabel(r'$R_{2}$', fontsize=14)
-ax.set_xlabel('t / ms', fontsize=14)
-ax.axvspan(rest_time1, rest_time1+stim_time, alpha=0.5, color='lightgrey')
+ax.set_ylabel('V / mV', fontsize=14)
+ax.set_xlabel(r'PO / $\degree$', fontsize=14)
 ax.tick_params(labelsize=12)
 plt.show()
 
-fig5, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1)
-ax1.plot(t, p_matrix[0, :], color='black')
-ax1.axvspan(rest_time1, rest_time1+stim_time, alpha=0.5, color='lightgrey')
+fig5, ax = plt.subplots()
+ax.plot(t, r2)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.set_ylabel(r'$R^{2}$', fontsize=14)
+ax.set_xlabel('t / ms', fontsize=14)
+ax.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax.tick_params(labelsize=12)
+plt.show()
+
+fig6, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1)
+ax1.plot(t, p_matrix[0, :])
+ax1.axvspan(t1, t2, alpha=0.5, color='lightgrey')
 ax1.spines['top'].set_visible(False)
 ax1.spines['right'].set_visible(False)
 ax1.set_ylabel('a / mV')
-ax2.plot(t, 180 * (p_matrix[1, :] / math.pi), color='black')
-ax2.axvspan(rest_time1, rest_time1+stim_time, alpha=0.5, color='lightgrey')
+ax2.plot(t, 180 * (p_matrix[1, :] / math.pi))
+ax2.axvspan(t1, t2, alpha=0.5, color='lightgrey')
 ax2.spines['top'].set_visible(False)
 ax2.spines['right'].set_visible(False)
 ax2.set_ylim(-math.pi, math.pi)
 ax2.set_yticks([-180, 0, 180])
 ax2.set_ylabel(r'$\mu$ / $\degree$')
-ax3.plot(t, np.exp(p_matrix[2, :]), color='black')
-ax3.axvspan(rest_time1, rest_time1+stim_time, alpha=0.5, color='lightgrey')
+ax3.plot(t, np.exp(p_matrix[2, :]))
+ax3.axvspan(t1, t2, alpha=0.5, color='lightgrey')
 ax3.spines['top'].set_visible(False)
 ax3.spines['right'].set_visible(False)
 ax3.set_ylabel(r'$\sigma^{2}$')
-ax4.plot(t, p_matrix[3, :], color='black')
-ax4.axvspan(rest_time1, rest_time1+stim_time, alpha=0.5, color='lightgrey')
+ax4.plot(t, p_matrix[3, :])
+ax4.axvspan(t1, t2, alpha=0.5, color='lightgrey')
 ax4.spines['top'].set_visible(False)
 ax4.spines['right'].set_visible(False)
 ax4.set_ylabel('b / mV')
 ax4.set_xlabel('t / ms')
 plt.tight_layout()
+plt.show()
+
+fig7, ax = plt.subplots()
+ax.plot(t, r_tot)
+ax.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.set_ylabel(r'$r_{total}$ / $s^{-1}$')
+ax.set_xlabel('t / ms')
 plt.show()
