@@ -57,15 +57,15 @@ def firing_rate_app(ydata):
     return integral_app(firing_rate(ydata))
 
 
+def init_p(p, params, t1, t2):
+    for n in np.arange(t1, t2, 1):
+        p[:, n] = params
+    return p
+
+
 def update_p(m, p, x, t1, t2):
     t = np.arange(t1, t2, 1)
     for n in t:
         m[:, n] = f_v_baseline(x, p[:, n])
     return m
 
-
-def init_p(p, params, t1, t2):
-    t = np.arange(t1, t2, 1)
-    for n in t:
-        p[:, n] = params
-    return p
