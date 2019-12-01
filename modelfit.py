@@ -4,15 +4,45 @@ import numpy as np
 
 def f_v(x, params):
     a, mu, log_var = params
-    return a * np.exp((np.cos(x - mu) - 1.) / math.exp(log_var))
+    return a * np.exp((np.cos((x - mu)) - 1.) / math.exp(log_var))
 
 
-def mse(y, ypred):
-    return np.sum(np.power(y - ypred, 2.))
+def f_v_baseline(x, params):
+    a, mu, log_var, b = params
+    return a * np.exp((np.cos((x - mu)) - 1.) / math.exp(log_var)) + b
+
+
+def f_v_a(x, params, a):
+    mu, log_var = params
+    return a * np.exp((np.cos((x - mu)) - 1.) / math.exp(log_var))
+
+
+def grad_a(x, y, mu, log_var, b):
+    exp_term = np.exp((np.cos((x - mu)) - 1.) / math.exp(log_var))
+    return np.sum((y - exp_term - b) * exp_term)
+
+
+def opt_a(x, y, mu, log_var, b):
+    exp_term = np.exp((np.cos((x - mu)) - 1.) / math.exp(log_var))
+    den = np.sum((y - b) * exp_term)
+    nom = np.sum(exp_term * exp_term)
+    return den / nom
+
+
+def mse(ydata, ypred):
+    return np.mean(np.power(ydata - ypred, 2.))
 
 
 def mse_fv(params, xdata, ydata):
     return mse(ydata, f_v(xdata, params))
+
+
+def mse_fv_baseline_a(params, xdata, ydata, a, b):
+    return mse(ydata, f_v_a(xdata, params, a) + b)
+
+
+def r_squared(ydata, ypred):
+    return 1 - (mse(ydata, ypred) / np.var(ydata))
 
 
 def integral_app(ydata):
@@ -27,5 +57,15 @@ def firing_rate_app(ydata):
     return integral_app(firing_rate(ydata))
 
 
-def r_squared(ydata, ypred):
-    return 1 - mse(ydata, ypred) / np.sum(np.power(ydata - np.mean(ydata), 2.))
+def update_p(m, p, x, t1, t2):
+    t = np.arange(t1, t2, 1)
+    for n in t:
+        m[:, n] = f_v_baseline(x, p[:, n])
+    return m
+
+
+def init_p(p, params, t1, t2):
+    t = np.arange(t1, t2, 1)
+    for n in t:
+        p[:, n] = params
+    return p
