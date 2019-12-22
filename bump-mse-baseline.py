@@ -62,6 +62,7 @@ p_matrix = modelfit.init_p(p_matrix, [6, 0, 0, 0], n1, n2)
 p_matrix = modelfit.init_p(p_matrix, [3, 0, 0, 0], n2, n3)
 
 est_matrix = np.zeros([N_neuron, N_point])
+
 for n in range(100):
     c1 = 0
     for i in range(n1):
@@ -72,7 +73,7 @@ for n in range(100):
     p_matrix[-1, 0:n1] = b_est
 
     c1 = 0
-    for i in range(int(rest_time1/t_int)):
+    for i in range(n1):
         a_est = modelfit.opt_a(ang_vector, V_matrix[:, c1], p_matrix[1, c1], p_matrix[2, c1], b_est)
         p_matrix[0, c1] = a_est
         est = minimize(modelfit.mse_fv_baseline_a, p_matrix[1:3, c1], args=(ang_vector, V_matrix[:, c1], a_est, b_est))
@@ -101,16 +102,16 @@ for n in range(200):
     print("{}th estimation of stimulus phase,  the last a, mean, log var estimates are  {}".format(str(n+1),
                                                                                                    p_matrix[0:3, c2-1]))
 for n in range(100):
-    c3 = int((rest_time1+stim_time)/t_int)
-    for i in range(int(rest_time2/t_int)):
+    c3 = n2
+    for i in range(n3-n2):
         est_matrix[:, c3] = modelfit.f_v_a(ang_vector, p_matrix[1:3, c3], p_matrix[0, c3])
         c3 += 1
     b_est = np.mean(V_matrix[:, n2:n3] - est_matrix[:, n2:n3])
     print("{}th estimation of stimulus phase,  b estimate is {}".format(n+1, b_est))
     p_matrix[-1, n2:n3] = b_est
 
-    c3 = int((rest_time1+stim_time)/t_int)
-    for i in range(int(rest_time2/t_int)):
+    c3 = n2
+    for i in range(n3-n2):
         a_est = modelfit.opt_a(ang_vector, V_matrix[:, c3], p_matrix[1, c3], p_matrix[2, c3], b_est)
         p_matrix[0, c3] = a_est
         est = minimize(modelfit.mse_fv_baseline_a, p_matrix[1:3, c3], args=(ang_vector, V_matrix[:, c3], a_est, b_est))
@@ -128,6 +129,7 @@ for i in range(n3):
 r_tot = []
 for i in range(n3):
     r_tot.append(modelfit.firing_rate_app(est_matrix[:, i]))
+
 
 fig1, (ax1, ax2) = plt.subplots(2, 1)
 im1 = ax1.imshow(V_matrix, interpolation='nearest', aspect='auto', extent=(0, t3, -180, 180))
