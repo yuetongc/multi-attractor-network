@@ -17,7 +17,7 @@ def f_v_a(x, params, a):
     return a * np.exp((np.cos((x - mu)) - 1.) / math.exp(log_var))
 
 
-def grad_a(x, y, mu, log_var, b):
+def grad_a_mse(x, y, mu, log_var, b):
     exp_term = np.exp((np.cos((x - mu)) - 1.) / math.exp(log_var))
     return np.sum((y - exp_term - b) * exp_term)
 
@@ -69,3 +69,39 @@ def update_p(m, p, x, t1, t2):
         m[:, n] = f_v_baseline(x, p[:, n])
     return m
 
+
+def circular_mean(data):
+    return np.angle(np.sum(1 * np.exp(1j*data)))
+
+
+def circular_variance(data):
+    return 1 - (np.absolute(np.sum(1 * np.exp(1j*data))) / data.size)
+
+
+def grad_a(x, a, mu, var, b):
+    return np.exp((np.cos((x - mu)) - 1.) / var)
+
+
+def grad_mu(x, a, mu, var, b):
+    return (a / var) * np.exp((np.cos((x - mu)) - 1.) / var) * np.sin(x - mu)
+
+
+def grad_var(x, a, mu, var, b):
+    return -a * (np.cos(x - mu) - 1) * np.exp((np.cos((x - mu)) - 1.) / var) / np.square(var)
+
+
+def grad_b(x, a, mu, var, b):
+    return np.ones(a.shape)
+
+
+def uniform_mu_integrand(x, a, mu, var, p):
+    return (a**p) * np.exp(p * (np.cos((x - mu)) - 1.) / var) / (2 * math.pi)
+
+
+def exp_response(x, params):
+    a, tau = params
+    return a * (1 - np.exp(-x / tau))
+
+
+def exp_response_mse(params, xdata, ydata):
+    return np.mean(np.power(ydata - exp_response(xdata, params), 2.))

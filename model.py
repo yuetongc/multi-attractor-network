@@ -5,11 +5,12 @@ import numpy as np
 
 
 class MultiAttractorModel:
-    def __init__(self, N, max_rate=100, tau_membrane=10, tau_noise=50, t_int=0.1):
+    def __init__(self, N, max_rate=100, tau_membrane=10, tau_noise=50, t_int=0.1, W_c=1):
         self.N = N
         self.max_rate = max_rate
         self.tau_membrane = tau_membrane
         self.tau_noise = tau_noise
+        self.W_c = W_c
         self.W = self.build_weight_matrix()
         self.noise_cov = self.build_noise_cov()
         self.cov_term = self.noise_cov_term()
@@ -19,7 +20,7 @@ class MultiAttractorModel:
         N_matrix = np.reshape(np.repeat(np.arange(self.N), self.N), (self.N, self.N))
         ind_matrix = N_matrix - np.transpose(N_matrix)
         ang_matrix = ind_matrix * 2 * math.pi / self.N
-        W_matrix = (np.cos(ang_matrix) * W_mod / self.max_rate + W_avg / self.max_rate) / self.N
+        W_matrix = (np.cos(ang_matrix) * W_mod / self.max_rate + W_avg / self.max_rate) * (self.W_c / self.N)
         return W_matrix
 
     def momentary_firing_rate(self, V_in, gain=0.1):
