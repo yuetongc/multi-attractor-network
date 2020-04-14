@@ -7,7 +7,7 @@ from scipy.optimize import minimize
 
 
 import os
-"path for stored data"
+"path for simulation data"
 os.chdir('/Users/yuetongyc/Desktop/Cambridge/IIB/Project//data')
 
 
@@ -118,19 +118,19 @@ plt.rcParams.update(rc)
 
 fig1, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(12, 12))
 
-ax1.plot(t_tick, mu_grad_1_sqr_mean, color='limegreen', label='c=1')
-ax1.plot(t_tick, mu_grad_1h_sqr_mean, color='forestgreen', label='c=1.5')
-ax1.plot(t_tick, mu_grad_2_sqr_mean, color='darkgreen', label='c=2')
+ax1.plot(t_tick, mu_grad_1_sqr_mean, color='skyblue', label='c=1')
+ax1.plot(t_tick, mu_grad_1h_sqr_mean, color='royalblue', label='c=1.5')
+ax1.plot(t_tick, mu_grad_2_sqr_mean, color='mediumblue', label='c=2')
 ax1.set_ylabel(r'$(\alpha_{\mu})^{2}$')
 
-ax2.plot(t_tick, mu_var_1, color='limegreen')
-ax2.plot(t_tick, mu_var_1h, color='forestgreen')
-ax2.plot(t_tick, mu_var_2, color='darkgreen')
+ax2.plot(t_tick, mu_var_1, color='skyblue')
+ax2.plot(t_tick, mu_var_1h, color='royalblue')
+ax2.plot(t_tick, mu_var_2, color='mediumblue')
 ax2.set_ylabel(r'$\sigma^{2}_{\mu}$')
 
-ax3.plot(t_tick, mu_grad_1_sqr_mean*mu_var_1, color='limegreen', label='c=1')
-ax3.plot(t_tick, mu_grad_1h_sqr_mean*mu_var_1h, color='forestgreen', label='c=1.5')
-ax3.plot(t_tick, mu_grad_2_sqr_mean*mu_var_2, color='darkgreen', label='c=2')
+ax3.plot(t_tick, mu_grad_1_sqr_mean*mu_var_1, color='skyblue', label='c=1')
+ax3.plot(t_tick, mu_grad_1h_sqr_mean*mu_var_1h, color='royalblue', label='c=1.5')
+ax3.plot(t_tick, mu_grad_2_sqr_mean*mu_var_2, color='mediumblue', label='c=2')
 ax3.plot(t_tick, v_variance_1, color='darkgrey', label='c=1')
 ax3.plot(t_tick, v_variance_1h, color='grey', label='c=1.5')
 ax3.plot(t_tick, v_variance_2, color='dimgrey', label='c=2')
@@ -176,42 +176,42 @@ stim_mu_var_est_2 = np.max(modelfit.exp_response(stim_x, stim_mu_var_params_2)) 
 
 fig2, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, figsize=(15, 15))
 
-ax1.plot(stim_ticks, stim_mu_coeff_1, color='limegreen')
+ax1.plot(stim_ticks, stim_mu_coeff_1, color='skyblue')
 ax1.plot(stim_ticks, modelfit.exp_response(stim_x, stim_mu_coeff_params_1), color='dimgrey', label=r'$\hat{\tau}=$'+str(int(stim_mu_coeff_params_1[1]*0.1))+'ms')
 ax1.get_xaxis().set_visible(False)
 ax1.axvline(x=stim_mu_coeff_params_1[1]*0.1, color='lightgrey')
 ax1.set_ylabel(r'$(\alpha_{\mu})^{2}$')
 ax1.legend()
 
-ax2.plot(stim_ticks, stim_mu_var_1, color='limegreen')
+ax2.plot(stim_ticks, stim_mu_var_1, color='skyblue')
 ax2.plot(stim_ticks, stim_mu_var_est_1, color='dimgrey', label=r'$\hat{\tau}=$'+str(int(stim_mu_var_params_1[1]*0.1))+'ms')
 ax2.get_xaxis().set_visible(False)
 ax2.axvline(x=stim_mu_var_params_1[1]*0.1, color='lightgrey')
 ax2.set_ylabel(r'$\sigma^{2}_{\mu}$')
 ax2.legend()
 
-ax3.plot(stim_ticks, stim_mu_coeff_1h, color='forestgreen')
+ax3.plot(stim_ticks, stim_mu_coeff_1h, color='royalblue')
 ax3.plot(stim_ticks, modelfit.exp_response(stim_x, stim_mu_coeff_params_1h), color='dimgrey', label=r'$\hat{\tau}=$'+str(int(stim_mu_coeff_params_1h[1]*0.1))+'ms')
 ax3.get_xaxis().set_visible(False)
 ax3.axvline(x=stim_mu_coeff_params_1h[1]*0.1, color='lightgrey')
 ax3.set_ylabel(r'$(\alpha_{\mu})^{2}$')
 ax3.legend()
 
-ax4.plot(stim_ticks, stim_mu_var_1h, color='forestgreen')
+ax4.plot(stim_ticks, stim_mu_var_1h, color='royalblue')
 ax4.plot(stim_ticks, stim_mu_var_est_1h, color='dimgrey', label=r'$\hat{\tau}=$'+str(int(stim_mu_var_params_1h[1]*0.1))+'ms')
 ax4.get_xaxis().set_visible(False)
 ax4.axvline(x=stim_mu_var_params_1h[1]*0.1, color='lightgrey')
 ax4.set_ylabel(r'$\sigma^{2}_{\mu}$')
 ax4.legend()
 
-ax5.plot(stim_ticks, stim_mu_coeff_2, color='darkgreen')
+ax5.plot(stim_ticks, stim_mu_coeff_2, color='mediumblue')
 ax5.plot(stim_ticks, modelfit.exp_response(stim_x, stim_mu_coeff_params_2), color='dimgrey', label=r'$\hat{\tau}=$'+str(int(stim_mu_coeff_params_2[1]*0.1))+'ms')
 ax5.axvline(x=stim_mu_coeff_params_2[1]*0.1, color='lightgrey')
 ax5.set_ylabel(r'$(\alpha_{\mu})^{2}$')
 ax5.legend()
 ax5.set_xlabel('t / ms')
 
-ax6.plot(stim_ticks, stim_mu_var_2, color='darkgreen')
+ax6.plot(stim_ticks, stim_mu_var_2, color='mediumblue')
 ax6.plot(stim_ticks, stim_mu_var_est_2, color='dimgrey', label=r'$\hat{\tau}=$'+str(int(stim_mu_var_params_2[1]*0.1))+'ms')
 ax6.axvline(x=stim_mu_var_params_2[1]*0.1, color='lightgrey')
 ax6.set_ylabel(r'$\sigma^{2}_{\mu}$')
