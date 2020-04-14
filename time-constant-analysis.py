@@ -7,7 +7,7 @@ from scipy.optimize import minimize
 
 
 import os
-os.chdir('/Users/yuetongyc/PycharmProjects/multi-attractor-model/data')
+os.chdir('/Users/yuetongyc/Desktop/Cambridge/IIB/Project//data')
 
 
 a_df_10 = pd.read_csv('a_tau_10_1.csv', index_col=False)
