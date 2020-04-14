@@ -7,6 +7,7 @@ from scipy.optimize import minimize
 
 
 import os
+"path for stored data"
 os.chdir('/Users/yuetongyc/Desktop/Cambridge/IIB/Project//data')
 
 
