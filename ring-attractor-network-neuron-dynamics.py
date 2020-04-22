@@ -3,6 +3,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import model
 
+
+rc = {"axes.spines.left": True,
+      "axes.spines.right": False,
+      "axes.spines.bottom": True,
+      "axes.spines.top": False,
+      "lines.linewidth": 2,
+      "xtick.labelsize": 24,
+      "ytick.labelsize": 24,
+      "axes.labelsize": 28,
+      }
+plt.rcParams.update(rc)
+
+
 N_neuron = 100
 
 attractor_model = model.MultiAttractorModel(N=N_neuron)
@@ -58,7 +71,7 @@ for i in range(N_trail):
     print("{}th run finished, took {} seconds".format(str(i+1), time.time() - running_time))
 
 
-fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
+fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(12, 8))
 
 for i in range(N_trail):
     ax1.plot(t, val1[i], color='black')
@@ -66,8 +79,7 @@ ax1.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='lightgrey')
 ax1.spines['top'].set_visible(False)
 ax1.spines['bottom'].set_visible(False)
 ax1.spines['right'].set_visible(False)
-ax1.set_ylabel(r'$V_{stim}$ / mV', fontsize=14)
-ax1.tick_params(labelsize=12)
+ax1.set_ylabel(r'$V_{stim}$ [mV]')
 
 for i in range(N_trail):
     ax2.plot(t, val2[i], color='black')
@@ -75,8 +87,7 @@ ax2.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='lightgrey')
 ax2.spines['top'].set_visible(False)
 ax2.spines['bottom'].set_visible(False)
 ax2.spines['right'].set_visible(False)
-ax2.set_ylabel(r'$V_{orth}$ / mV', fontsize=14)
-ax2.tick_params(labelsize=12)
+ax2.set_ylabel(r'$V_{orth}$ [mV]')
 
 for i in range(N_trail):
     ax3.plot(t, val3[i], color='black')
@@ -84,9 +95,8 @@ ax3.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='lightgrey')
 ax3.spines['top'].set_visible(False)
 ax3.spines['bottom'].set_visible(False)
 ax3.spines['right'].set_visible(False)
-ax3.set_ylabel(r'$V_{opp}$ / mV', fontsize=14)
-ax3.set_xlabel('t / ms', fontsize=14)
-ax3.tick_params(labelsize=12)
+ax3.set_ylabel(r'$V_{opp}$ [mV]')
+ax3.set_xlabel('t [ms]')
 
 plt.tight_layout()
-plt.show()
+fig.savefig('neuron_dynamics')
