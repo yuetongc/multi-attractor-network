@@ -2,6 +2,20 @@ import model
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+rc = {"axes.spines.left": True,
+      "axes.spines.right": False,
+      "axes.spines.bottom": False,
+      "axes.spines.top": False,
+      "lines.linewidth": 2,
+      "xtick.labelsize": 24,
+      "ytick.labelsize": 24,
+      'legend.fontsize': 24,
+      "axes.labelsize": 28,
+      }
+plt.rcParams.update(rc)
+
+
 N_neuron = 100
 
 attractor_model = model.MultiAttractorModel(N=N_neuron)
@@ -44,12 +58,12 @@ for i in range(int(rest_time2/t_int)):
     V_matrix[:, c] = V
     c += 1
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(16, 5))
 im = plt.imshow(V_matrix, interpolation='nearest', aspect='auto', extent=(0, total_time, -180, 180))
-ax.spines['top'].set_visible(False)
-ax.spines['bottom'].set_visible(False)
-ax.spines['right'].set_visible(False)
-ax.set_ylabel(r'PO / $\degree$')
-ax.set_xlabel('t / ms')
+ax.set_yticks([-180, 0, 180])
+ax.set_ylabel(r'PO [$\degree$]')
+ax.set_xlabel('t [ms]')
 fig.colorbar(im, ax=ax)
+plt.tight_layout()
 plt.show()
+fig.savefig('evoked_activity')
