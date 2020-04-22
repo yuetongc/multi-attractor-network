@@ -1,8 +1,21 @@
 import time
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
 import model
+
+
+rc = {"axes.spines.left": True,
+      "axes.spines.right": False,
+      "axes.spines.bottom": False,
+      "axes.spines.top": False,
+      "lines.linewidth": 2,
+      "xtick.labelsize": 24,
+      "ytick.labelsize": 24,
+      'legend.fontsize': 24,
+      "axes.labelsize": 28,
+      }
+plt.rcParams.update(rc)
+
 
 N_neuron = 100
 
@@ -56,18 +69,15 @@ for k in range(N_stim):
     var = np.var(V_matrix, axis=0)
     var_matrix[k] = np.sqrt(np.mean(var, axis=1))
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(16, 5.5))
 lines = []
-lines += ax.plot(t, var_matrix[0], label='c=0', color='dimgrey', linewidth=2)
-lines += ax.plot(t, var_matrix[1], label='c=1', color='darkgreen', linewidth=2)
-lines += ax.plot(t, var_matrix[2], label='c=2', color='forestgreen', linewidth=2)
-lines += ax.plot(t, var_matrix[3], label='c=3', color='lightgreen', linewidth=2)
+lines += ax.plot(t, var_matrix[0], label='c=0', color='dimgrey')
+lines += ax.plot(t, var_matrix[1], label='c=1', color='darkgreen')
+lines += ax.plot(t, var_matrix[2], label='c=2', color='forestgreen')
+lines += ax.plot(t, var_matrix[3], label='c=3', color='limegreen')
 ax.legend(lines, [l.get_label() for l in lines], frameon=False)
 ax.axvspan(rest_time1, rest_time1 + stim_time, alpha=0.5, color='lightgrey')
-ax.spines['top'].set_visible(False)
-ax.spines['bottom'].set_visible(False)
-ax.spines['right'].set_visible(False)
-ax.set_ylabel(r'$\sqrt{ \langle{ Var_{trials}(V) \rangle }_{neurons}}$ / mV', fontsize=14)
-ax.set_xlabel('t / ms', fontsize=14)
-ax.tick_params(labelsize=12)
-plt.show()
+ax.set_ylabel(r'$\sqrt{ \langle{ Var_{n}[V] \rangle }_{i}}$ [mV]')
+ax.set_xlabel('t [ms]')
+plt.tight_layout()
+fig.savefig('multiple_stim_lvl')
