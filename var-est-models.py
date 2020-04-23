@@ -5,9 +5,22 @@ import matplotlib.pyplot as plt
 import scipy.integrate as integrate
 import modelfit
 
-
 import os
-os.chdir('/Users/yuetongyc/PycharmProjects/multi-attractor-model/data')
+"path for simulation data"
+os.chdir('/Users/yuetongyc/Desktop/Cambridge/IIB/Project/data')
+
+
+rc = {"axes.spines.left": True,
+      "axes.spines.right": False,
+      "axes.spines.bottom": False,
+      "axes.spines.top": False,
+      "lines.linewidth": 2,
+      "xtick.labelsize": 20,
+      "ytick.labelsize": 20,
+      'legend.fontsize': 18,
+      "axes.labelsize": 24,
+      }
+plt.rcParams.update(rc)
 
 
 a_df = pd.read_csv('a_tau_10_1.csv', index_col=False)
@@ -143,19 +156,7 @@ uniform_mu_var_params_const_est_df = pd.read_csv('uniform_mu_var_params_const_es
 uniform_mu_var_params_const_est = np.mean(uniform_mu_var_params_const_est_df.values, axis=0)
 
 
-font = {'size': 32}
-plt.rc('font', **font)
-
-
-rc = {"axes.spines.left": True,
-      "axes.spines.right": False,
-      "axes.spines.bottom": False,
-      "axes.spines.top": False,
-      "lines.linewidth": 2}
-plt.rcParams.update(rc)
-
-
-fig1, ax = plt.subplots(1, 1, figsize=(24, 10))
+fig1, ax = plt.subplots(1, 1, figsize=(16, 5.5))
 ax.plot(t_tick, v_var_mean, color='dimgrey', label='true')
 ax.plot(t_tick, mu_variability_est, color='firebrick', label='assumption 1')
 ax.plot(t_tick, first_order_var_est, color='orange', label='assumption 2a')
@@ -165,7 +166,9 @@ ax.plot(t_tick, mu_term_var_params_const_est, color='cornflowerblue', label='ass
 ax.plot(t_tick, uniform_mu_var_params_const_est, color='mediumblue', label='assumption 1+2b+3')
 ax.axvspan(t1, t2, alpha=0.5, color='lightgrey')
 ax.set_ylim(0, 3.2)
-ax.set_ylabel(r'${\sigma^{2}}$')
-ax.set_xlabel('t / ms')
-ax.legend()
-fig1.savefig('Variance Estimation')
+ax.set_ylabel(r'${\hat{\sigma}^{2}}$')
+ax.set_xlabel('t [ms]')
+ax.legend(frameon=False, loc='upper right')
+plt.tight_layout()
+plt.show()
+fig1.savefig('var_reconstruction')
