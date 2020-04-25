@@ -156,19 +156,22 @@ uniform_mu_var_params_const_est_df = pd.read_csv('uniform_mu_var_params_const_es
 uniform_mu_var_params_const_est = np.mean(uniform_mu_var_params_const_est_df.values, axis=0)
 
 
-fig1, ax = plt.subplots(1, 1, figsize=(16, 5.5))
+fig1, ax = plt.subplots(figsize=(16, 5.5))
 ax.plot(t_tick, v_var_mean, color='dimgrey', label='true')
 ax.plot(t_tick, mu_variability_est, color='firebrick', label='assumption 1')
 ax.plot(t_tick, first_order_var_est, color='orange', label='assumption 2a')
-ax.plot(t_tick, mu_term_var_est, color='limegreen', label='assumption 1+2a')
-ax.plot(t_tick, uniform_mu_var_est, color='seagreen', label='assumption 1+2b')
-ax.plot(t_tick, mu_term_var_params_const_est, color='cornflowerblue', label='assumption 1+2a+3')
-ax.plot(t_tick, uniform_mu_var_params_const_est, color='mediumblue', label='assumption 1+2b+3')
+ax.plot(t_tick, mu_term_var_params_const_est, color='limegreen', label='assumption 1+2a+3')
+ax.plot(t_tick, uniform_mu_var_params_const_est, color='royalblue', label='assumption 1+2b+3')
+ax.plot(t_tick, mu_term_var_est, color='seagreen', linewidth=2, linestyle='dashed', label='assumption 1+2a')
+ax.plot(t_tick, uniform_mu_var_est, color='mediumblue', linewidth=2, linestyle='dashed', label='assumption 1+2b')
 ax.axvspan(t1, t2, alpha=0.5, color='lightgrey')
 ax.set_ylim(0, 3.2)
 ax.set_ylabel(r'${\hat{\sigma}^{2}}$')
 ax.set_xlabel('t [ms]')
-ax.legend(frameon=False, loc='upper right')
+handles,labels = ax.get_legend_handles_labels()
+handles = [handles[0], handles[1], handles[2], handles[5], handles[3], handles[6], handles[4]]
+labels = [labels[0], labels[1], labels[2], labels[5], labels[3], labels[6], labels[4]]
+ax.legend(handles, labels, frameon=False, loc='upper right')
 plt.tight_layout()
 plt.show()
 fig1.savefig('var_reconstruction')
