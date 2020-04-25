@@ -119,9 +119,9 @@ fig1.colorbar(im2, ax=axes)
 fig1.savefig('free_true_data')
 
 fig2, ax = plt.subplots(figsize=(10, 8))
-ax.plot(np.linspace(-180, 180, N_neuron), V_matrix[:, n1-int(200/t_int)], linestyle='--', marker='o',
-        markersize=2, color='black', label='actual')
-ax.plot(np.linspace(-180, 180, N_neuron), est_matrix[:, n1-int(200/t_int)], color='steelblue', label='fitted')
+ax.plot(np.linspace(-180, 180, N_neuron), V_matrix[:, n1-int(500/t_int)], color='dimgrey', label='actual')
+ax.plot(np.linspace(-180, 180, N_neuron), est_matrix[:, n1-int(500/t_int)], linestyle='--', marker='o',
+        markersize=2, color='steelblue', label='fitted')
 ax.legend(frameon=False)
 ax.spines['bottom'].set_visible(True)
 ax.set_ylabel('V [mV]')
@@ -131,9 +131,9 @@ plt.tight_layout()
 fig2.savefig('free_fit_before')
 
 fig3, ax = plt.subplots(figsize=(10, 8))
-ax.plot(np.linspace(-180, 180, N_neuron), V_matrix[:, n2-int(200/t_int)], linestyle='--',
-        marker='o', markersize=2, color='black', label='actual')
-ax.plot(np.linspace(-180, 180, N_neuron), est_matrix[:, n2-int(200/t_int)], color='steelblue', label='fitted')
+ax.plot(np.linspace(-180, 180, N_neuron), V_matrix[:, n2-int(500/t_int)], color='dimgrey', label='actual')
+ax.plot(np.linspace(-180, 180, N_neuron), est_matrix[:, n2-int(500/t_int)], linestyle='--',
+        marker='o', markersize=2, color='steelblue', label='fitted')
 ax.legend(frameon=False)
 ax.spines['bottom'].set_visible(True)
 ax.set_ylabel('V [mV]')
@@ -142,9 +142,9 @@ ax.set_xticks([-180, 0, 180])
 fig3.savefig('free_fit_during')
 
 fig4, ax = plt.subplots(figsize=(10, 8))
-ax.plot(np.linspace(-180, 180, N_neuron), V_matrix[:, n2+int(200/t_int)], linestyle='--',
-        marker='o', markersize=2, color='black', label='actual')
-ax.plot(np.linspace(-180, 180, N_neuron), est_matrix[:, n2+int(200/t_int)], color='steelblue', label='fitted')
+ax.plot(np.linspace(-180, 180, N_neuron), V_matrix[:, n2+int(500/t_int)], color='dimgrey', label='actual')
+ax.plot(np.linspace(-180, 180, N_neuron), est_matrix[:, n2+int(500/t_int)], linestyle='--',
+        marker='o', markersize=2, color='steelblue', label='fitted')
 ax.legend(frameon=False)
 ax.spines['bottom'].set_visible(True)
 ax.set_ylabel('V [mV]')
