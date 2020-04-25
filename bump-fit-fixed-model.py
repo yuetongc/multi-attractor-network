@@ -3,8 +3,15 @@ import modelfit
 import time
 import math
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
+
+
+import os
+"path for simulation data"
+os.chdir('/Users/yuetongyc/Desktop/Cambridge/IIB/Project/data')
+
 
 N_neuron = 100
 
@@ -54,6 +61,9 @@ for i in range(n3-n2):
     V_matrix[:, c] = V
     c += 1
 print("end of simulation, took {} seconds".format(time.time() - timer1))
+
+V_df = pd.read_csv('V_data.csv', index_col=False)
+V_matrix = V_df.values
 
 
 N_params = 4
@@ -156,7 +166,7 @@ ax1.set_title('True Activity')
 ax1.set_ylabel(r'$\theta\ [\degree$]')
 ax1.set_yticks([-180, 0, 180])
 im2 = ax2.imshow(est_matrix, interpolation='nearest', aspect='auto', extent=(0, t3, -180, 180))
-ax2.set_title('Bump Fit')
+ax2.set_title('Bump Fit (Fixed Model)')
 ax2.set_ylabel(r'$\theta\ [\degree$]')
 ax2.set_yticks([-180, 0, 180])
 ax2.set_xlabel('t [ms]')
