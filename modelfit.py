@@ -78,6 +78,10 @@ def circular_variance(data):
     return 1 - (np.absolute(np.sum(1 * np.exp(1j*data))) / data.size)
 
 
+def circular_precision(data):
+    return np.absolute(np.mean(1 * np.exp(1j*data)))
+
+
 def grad_a(x, a, mu, var, b):
     return np.exp((np.cos((x - mu)) - 1.) / var)
 
