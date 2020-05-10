@@ -156,22 +156,66 @@ uniform_mu_var_params_const_est_df = pd.read_csv('uniform_mu_var_params_const_es
 uniform_mu_var_params_const_est = np.mean(uniform_mu_var_params_const_est_df.values, axis=0)
 
 
-fig1, ax = plt.subplots(figsize=(16, 5.5))
-ax.plot(t_tick, v_var_mean, color='dimgrey', label='true')
-ax.plot(t_tick, mu_variability_est, color='firebrick', label='assumption 1')
-ax.plot(t_tick, first_order_var_est, color='orange', label='assumption 2a')
-ax.plot(t_tick, mu_term_var_params_const_est, color='limegreen', label='assumption 1+2a+3')
-ax.plot(t_tick, uniform_mu_var_params_const_est, color='royalblue', label='assumption 1+2b+3')
-ax.plot(t_tick, mu_term_var_est, color='seagreen', linewidth=2, linestyle='dashed', label='assumption 1+2a')
-ax.plot(t_tick, uniform_mu_var_est, color='mediumblue', linewidth=2, linestyle='dashed', label='assumption 1+2b')
-ax.axvspan(t1, t2, alpha=0.5, color='lightgrey')
-ax.set_ylim(0, 3.2)
-ax.set_ylabel(r'${\hat{\sigma}^{2}}$')
-ax.set_xlabel('t [ms]')
-handles,labels = ax.get_legend_handles_labels()
-handles = [handles[0], handles[1], handles[2], handles[5], handles[3], handles[6], handles[4]]
-labels = [labels[0], labels[1], labels[2], labels[5], labels[3], labels[6], labels[4]]
-ax.legend(handles, labels, frameon=False, loc='upper right')
+"Assumption 1 + Assumption 2a + Assumption 3 (Rescaled)"
+avg_pre_v_var = np.mean(v_var_mean[0:int(t1/0.1)])
+avg_pre_mu_term_var_params_const_est = np.mean(mu_term_var_params_const_est[0:int(t1/0.1)])
+pre_scaling = avg_pre_mu_term_var_params_const_est/avg_pre_v_var
+
+mu_term_var_params_const_est_adjusted_b = mu_term_var_params_const_est / pre_scaling
+
+
+"Reconstruction Statistics"
+circular_precision_true_var = np.apply_along_axis(modelfit.circular_precision, 0, var)
+
+
+fig1, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(16, 16))
+ax1.plot(t_tick, v_var_mean, color='dimgrey', label='true')
+ax1.plot(t_tick, mu_variability_est, color='firebrick', label='assumption 1')
+ax1.plot(t_tick, first_order_var_est, color='orange', label='assumption 2a')
+ax1.plot(t_tick, mu_term_var_params_const_est+0.025, color='limegreen', label='assumption 1+2a+3')
+ax1.plot(t_tick, uniform_mu_var_params_const_est+0.025, color='royalblue', label='assumption 1+2b+3')
+ax1.plot(t_tick, mu_term_var_est, color='seagreen', linewidth=2, linestyle='dashed', label='assumption 1+2a')
+ax1.plot(t_tick, uniform_mu_var_est, color='mediumblue', linewidth=2, linestyle='dashed', label='assumption 1+2b')
+ax1.plot(t_tick, mu_term_var_params_const_est_adjusted_b, color='darkgreen', label='assumption 1+2a+3 (adjusted)')
+ax1.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax1.set_ylim(0, 3.2)
+ax1.set_ylabel(r'${\hat{\sigma}^{2}}$')
+handles,labels = ax1.get_legend_handles_labels()
+handles = [handles[0], handles[1], handles[2], handles[5], handles[3], handles[7], handles[6], handles[4]]
+labels = [labels[0], labels[1], labels[2], labels[5], labels[3], labels[7], labels[6], labels[4]]
+ax1.legend(handles, labels, frameon=False, loc='upper right')
+ax2.plot(t_tick, circular_precision_true_var, color='dimgrey')
+ax2.set_ylabel(r'$\rho_{\hat{\mu}}$')
+ax2.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax3.plot(t_tick, a_mean, color='dimgrey')
+ax3.set_ylabel(r'$\bar{a} [mV]$')
+ax3.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax3.set_xlabel('t [ms]')
 plt.tight_layout()
-plt.show()
 fig1.savefig('var_reconstruction')
+
+
+von_mises_k_0_var_est_df = pd.read_csv('von_mises_k_0_var_est.csv', index_col=False)
+von_mises_k_0_var_est = np.mean(von_mises_k_0_var_est_df.values, axis=0)
+von_mises_k_8_var_est_df = pd.read_csv('von_mises_k_8_var_est.csv', index_col=False)
+von_mises_k_8_var_est = np.mean(von_mises_k_8_var_est_df.values, axis=0)
+
+
+fig2, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8))
+ax1.plot(t_tick, v_var_mean, color='dimgrey', label='true')
+ax1.plot(t_tick, uniform_mu_var_params_const_est, color='royalblue', label=r'uniform $\mu$')
+ax1.plot(t_tick, von_mises_k_0_var_est, color='orange', label='von Mises, k=0')
+ax1.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax1.set_ylabel(r'$\hat{\sigma}^{2}$')
+ax1.set_xlabel('t / ms')
+ax2.plot(t_tick, v_var_mean, color='dimgrey', label='true')
+ax2.plot(t_tick, von_mises_k_0_var_est, color='orange', label='von Mises, k=0')
+ax2.plot(t_tick, von_mises_k_8_var_est, color='orangered', label='von Mises, k=8')
+ax2.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax2.set_ylabel(r'$\hat{\sigma}^{2}$')
+ax2.set_xlabel('t / ms')
+ax1.legend(frameon=False)
+ax2.legend(frameon=False)
+plt.tight_layout()
+fig2.savefig('von_mises_reconstruction')
+
