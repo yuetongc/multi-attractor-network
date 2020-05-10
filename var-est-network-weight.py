@@ -183,6 +183,10 @@ stim_mu_coeff_params_1 = minimize(modelfit.exp_response_mse, params_guess, args=
 stim_mu_coeff_params_1h = minimize(modelfit.exp_response_mse, params_guess, args=(stim_x, norm_stim_mu_coeff_1h)).x
 stim_mu_coeff_params_2 = minimize(modelfit.exp_response_mse, params_guess, args=(stim_x, norm_stim_mu_coeff_2)).x
 
+stim_mu_coeff_est_1 = modelfit.exp_response(stim_x, stim_mu_coeff_params_1) + np.min(stim_mu_coeff_1)
+stim_mu_coeff_est_1h = modelfit.exp_response(stim_x, stim_mu_coeff_params_1h) + np.min(stim_mu_coeff_1h)
+stim_mu_coeff_est_2 = modelfit.exp_response(stim_x, stim_mu_coeff_params_2) + np.min(stim_mu_coeff_2)
+
 
 stim_mu_var_1 = mu_var_1[start_time:end_time]
 stim_mu_var_1h = mu_var_1h[start_time:end_time]
@@ -196,12 +200,55 @@ stim_mu_var_params_1 = minimize(modelfit.exp_response_mse, params_guess, args=(s
 stim_mu_var_params_1h = minimize(modelfit.exp_response_mse, params_guess, args=(stim_x, norm_stim_mu_var_1h)).x
 stim_mu_var_params_2 = minimize(modelfit.exp_response_mse, params_guess, args=(stim_x, norm_stim_mu_var_2)).x
 
-stim_mu_var_est_1 = np.max(modelfit.exp_response(stim_x, stim_mu_var_params_1)) \
-                    - modelfit.exp_response(stim_x, stim_mu_var_params_1)
-stim_mu_var_est_1h = np.max(modelfit.exp_response(stim_x, stim_mu_var_params_1h)) \
-                     - modelfit.exp_response(stim_x, stim_mu_var_params_1h)
-stim_mu_var_est_2 = np.max(modelfit.exp_response(stim_x, stim_mu_var_params_2)) \
-                    - modelfit.exp_response(stim_x, stim_mu_var_params_2)
+stim_mu_var_est_1 = np.max(modelfit.exp_response(stim_x, stim_mu_var_params_1)) - modelfit.exp_response(stim_x, stim_mu_var_params_1)
+stim_mu_var_est_1h = np.max(modelfit.exp_response(stim_x, stim_mu_var_params_1h)) - modelfit.exp_response(stim_x, stim_mu_var_params_1h)
+stim_mu_var_est_2 = np.max(modelfit.exp_response(stim_x, stim_mu_var_params_2)) - modelfit.exp_response(stim_x, stim_mu_var_params_2)
+
+
+v_variance_max_index_1 = int(np.argmax(v_variance_1))
+v_variance_max_index_1h = int(np.argmax(v_variance_1h))
+v_variance_max_index_2 = int(np.argmax(v_variance_2))
+
+stim_v_variance_up_1 = v_variance_1[start_time:v_variance_max_index_1]
+stim_v_variance_up_1h = v_variance_1h[start_time:v_variance_max_index_1h]
+stim_v_variance_up_2 = v_variance_2[start_time:v_variance_max_index_2]
+
+norm_stim_v_variance_up_1 = stim_v_variance_up_1 - np.min(stim_v_variance_up_1)
+norm_stim_v_variance_up_1h = stim_v_variance_up_1h - np.min(stim_v_variance_up_1h)
+norm_stim_v_variance_up_2 = stim_v_variance_up_2 - np.min(stim_v_variance_up_2)
+
+stim_x_up_1 = np.arange(0, v_variance_max_index_1-start_time)
+stim_x_up_1h = np.arange(0, v_variance_max_index_1h-start_time)
+stim_x_up_2 = np.arange(0, v_variance_max_index_2-start_time)
+
+stim_v_variance_up_params_1 = minimize(modelfit.exp_response_mse, params_guess, args=(stim_x_up_1, norm_stim_v_variance_up_1)).x
+stim_v_variance_up_params_1h = minimize(modelfit.exp_response_mse, params_guess, args=(stim_x_up_1h, norm_stim_v_variance_up_1h)).x
+stim_v_variance_up_params_2 = minimize(modelfit.exp_response_mse, params_guess, args=(stim_x_up_2, norm_stim_v_variance_up_2)).x
+
+stim_v_variance_up_est_1 = modelfit.exp_response(stim_x_up_1, stim_v_variance_up_params_1) + np.min(stim_v_variance_up_1)
+stim_v_variance_up_est_1h = modelfit.exp_response(stim_x_up_1h, stim_v_variance_up_params_1h) + np.min(stim_v_variance_up_1h)
+stim_v_variance_up_est_2 = modelfit.exp_response(stim_x_up_2, stim_v_variance_up_params_2) + np.min(stim_v_variance_up_2)
+
+
+stim_v_variance_down_1 = v_variance_1[v_variance_max_index_1:end_time]
+stim_v_variance_down_1h = v_variance_1h[v_variance_max_index_1h:end_time]
+stim_v_variance_down_2 = v_variance_2[v_variance_max_index_2:end_time]
+
+norm_stim_v_variance_down_1 = v_variance_1[v_variance_max_index_1] - stim_v_variance_down_1
+norm_stim_v_variance_down_1h = v_variance_1h[v_variance_max_index_1h] - stim_v_variance_down_1h
+norm_stim_v_variance_down_2 = v_variance_2[v_variance_max_index_2] - stim_v_variance_down_2
+
+stim_x_down_1 = np.arange(0, end_time-v_variance_max_index_1)
+stim_x_down_1h = np.arange(0, end_time-v_variance_max_index_1h)
+stim_x_down_2 = np.arange(0, end_time-v_variance_max_index_2)
+
+stim_v_variance_down_params_1 = minimize(modelfit.exp_response_mse, params_guess, args=(stim_x_down_1, norm_stim_v_variance_down_1)).x
+stim_v_variance_down_params_1h = minimize(modelfit.exp_response_mse, params_guess, args=(stim_x_down_1h, norm_stim_v_variance_down_1h)).x
+stim_v_variance_down_params_2 = minimize(modelfit.exp_response_mse, params_guess, args=(stim_x_down_2, norm_stim_v_variance_down_2)).x
+
+stim_v_variance_down_est_1 = v_variance_1[v_variance_max_index_1] - modelfit.exp_response(stim_x_down_1, stim_v_variance_down_params_1)
+stim_v_variance_down_est_1h = v_variance_1h[v_variance_max_index_1h] - modelfit.exp_response(stim_x_down_1h, stim_v_variance_down_params_1h)
+stim_v_variance_down_est_2 = v_variance_2[v_variance_max_index_2] - modelfit.exp_response(stim_x_down_2, stim_v_variance_down_params_2)
 
 
 v_variance_max_index_1 = int(np.argmax(v_variance_1))
@@ -261,6 +308,11 @@ stim_var_est_up_params_1 = minimize(modelfit.exp_response_mse, params_guess, arg
 stim_var_est_up_params_1h = minimize(modelfit.exp_response_mse, params_guess, args=(stim_est_x_up_1h, norm_stim_var_est_up_1h)).x
 stim_var_est_up_params_2 = minimize(modelfit.exp_response_mse, params_guess, args=(stim_est_x_up_2, norm_stim_var_est_up_2)).x
 
+stim_var_est_up_est_1 = modelfit.exp_response(stim_est_x_up_1, stim_var_est_up_params_1) + np.min(stim_var_est_up_1)
+stim_var_est_up_est_1h = modelfit.exp_response(stim_est_x_up_1h, stim_var_est_up_params_1h) + np.min(stim_var_est_up_1h)
+stim_var_est_up_est_2 = modelfit.exp_response(stim_est_x_up_2, stim_var_est_up_params_2) + np.min(stim_var_est_up_2)
+
+
 stim_var_est_down_1 = mu_grad_params_const_1_est[var_est_max_index_1:end_time]
 stim_var_est_down_1h = mu_grad_params_const_1h_est[var_est_max_index_1h:end_time]
 stim_var_est_down_2 = mu_grad_params_const_2_est[var_est_max_index_2:end_time]
@@ -277,6 +329,10 @@ stim_var_est_down_params_1 = minimize(modelfit.exp_response_mse, params_guess, a
 stim_var_est_down_params_1h = minimize(modelfit.exp_response_mse, params_guess, args=(stim_est_x_down_1h, norm_stim_var_est_down_1h)).x
 stim_var_est_down_params_2 = minimize(modelfit.exp_response_mse, params_guess, args=(stim_est_x_down_2, norm_stim_var_est_down_2)).x
 
+stim_var_est_down_est_1 = mu_grad_params_const_1_est[var_est_max_index_1] - modelfit.exp_response(stim_est_x_down_1, stim_var_est_down_params_1)
+stim_var_est_down_est_1h = mu_grad_params_const_1h_est[var_est_max_index_1h] - modelfit.exp_response(stim_est_x_down_1h, stim_var_est_down_params_1h)
+stim_var_est_down_est_2 = mu_grad_params_const_2_est[var_est_max_index_2] - modelfit.exp_response(stim_est_x_down_2, stim_var_est_down_params_2)
+
 
 network_weight = [1, 1.5, 2]
 
@@ -290,21 +346,86 @@ est_var_down_tau = [stim_var_est_down_params_1[1]*0.1, stim_var_est_down_params_
 
 
 fig2, (ax1, ax2) = plt.subplots(1, 2, figsize=(11, 5))
+
 line1 = ax1.scatter(network_weight, true_var_up_tau, s=40, label='true', color='dimgrey')
 line2 = ax1.scatter(network_weight, est_var_up_tau, s=40, label=r'$\alpha^{2}\sigma^{2}$', marker='v', color='red')
 line3 = ax1.scatter(network_weight, coeff_tau, s=40, label=r'$\alpha^{2}$', marker='x', color='forestgreen')
-ax1.set_ylabel(r'$\tau\ [ms]$')
+ax1.set_ylabel(r'$\tau_{r}\ [ms]$')
 ax1.set_xlabel(r'$\tau_{m}\ [ms]$')
 ax1.set_xticks(network_weight)
 ax1.spines['bottom'].set_visible(True)
 ax2.scatter(network_weight, est_var_down_tau, s=40, label='true', color='dimgrey')
 ax2.scatter(network_weight, true_var_down_tau, s=40, label=r'$\tau_{a}^{2}\sigma^{2}$', marker='v', color='orangered')
 line4 = ax2.scatter(network_weight, var_tau, s=40, label=r'$\sigma^{2}$', marker='x', color='royalblue')
-ax2.set_ylabel(r'$\tau\ [ms]$')
+ax2.set_ylabel(r'$\tau_{d}\ [ms]$')
 ax2.set_xlabel(r'$\tau_{m}\ [ms]$')
 ax2.set_xticks(network_weight)
 ax2.set_ylim([0, 800])
 ax2.spines['bottom'].set_visible(True)
-plt.legend(handles=[line1, line2, line3, line4], loc='best', fontsize=18)
+plt.legend(handles = [line1, line2, line3, line4], loc='best', fontsize=18)
 plt.tight_layout()
-fig2.savefig('network_weight_effect')
+fig2.savefig('network-weight-effect')
+
+
+stim_v_variance_est_1 = np.concatenate((stim_v_variance_up_est_1, stim_v_variance_down_est_1))
+stim_v_variance_est_1h = np.concatenate((stim_v_variance_up_est_1h, stim_v_variance_down_est_1h))
+stim_v_variance_est_2 = np.concatenate((stim_v_variance_up_est_2, stim_v_variance_down_est_2))
+
+stim_v_est_est_1 = np.concatenate((stim_var_est_up_est_1, stim_var_est_down_est_1))
+stim_v_est_est_1h = np.concatenate((stim_var_est_up_est_1h, stim_var_est_down_est_1h))
+stim_v_est_est_2 = np.concatenate((stim_var_est_up_est_2, stim_var_est_down_est_2))
+
+
+fig3, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(11, 20))
+ax1.plot(stim_ticks, stim_mu_coeff_1, color='lightgreen', label=r'$\hat{\tau}_{1}=$'+str(int(stim_mu_coeff_params_1[1]*0.1))+'ms')
+ax1.plot(stim_ticks, stim_mu_coeff_est_1, color='dimgrey', linestyle='dashed')
+ax1.axvline(x=stim_mu_coeff_params_1[1]*0.1, linestyle='dashed', color='silver')
+ax1.plot(stim_ticks, stim_mu_coeff_1h, color='forestgreen', label=r'$\hat{\tau}_{1h}=$'+str(int(stim_mu_coeff_params_1h[1]*0.1))+'ms')
+ax1.plot(stim_ticks, stim_mu_coeff_est_1h, color='dimgrey', linestyle='dashed')
+ax1.axvline(x=stim_mu_coeff_params_1h[1]*0.1, linestyle='dashed', color='silver')
+ax1.plot(stim_ticks, stim_mu_coeff_2, color='darkgreen', label=r'$\hat{\tau}_{2}=$'+str(int(stim_mu_coeff_params_2[1]*0.1))+'ms')
+ax1.plot(stim_ticks, stim_mu_coeff_est_2, color='dimgrey', linestyle='dashed')
+ax1.axvline(x=stim_mu_coeff_params_2[1]*0.1, linestyle='dashed', color='silver')
+ax1.set_ylabel(r'$\langle (\alpha_{i}^{\mu})^{2} \rangle_{i}$')
+ax1.legend(frameon=False, loc='lower right')
+ax2.plot(stim_ticks, stim_mu_var_1, color='deepskyblue', label=r'$\hat{\tau}_{1}=$'+str(int(stim_mu_var_params_1[1]*0.1))+'ms')
+ax2.plot(stim_ticks, stim_mu_var_est_1, color='dimgrey', linestyle='dashed')
+ax2.axvline(x=stim_mu_var_params_1[1]*0.1, linestyle='dashed', color='slategray')
+ax2.plot(stim_ticks, stim_mu_var_1h, color='royalblue', label=r'$\hat{\tau}_{1h}=$'+str(int(stim_mu_var_params_1h[1]*0.1))+'ms')
+ax2.plot(stim_ticks, stim_mu_var_est_1h, color='dimgrey', linestyle='dashed')
+ax2.axvline(x=stim_mu_var_params_1h[1]*0.1, linestyle='dashed', color='slategray')
+ax2.plot(stim_ticks, stim_mu_var_2, color='mediumblue', label=r'$\hat{\tau}_{2}=$'+str(int(stim_mu_var_params_2[1]*0.1))+'ms')
+ax2.plot(stim_ticks, stim_mu_var_est_2, color='dimgrey', linestyle='dashed')
+ax2.axvline(x=stim_mu_var_params_2[1]*0.1, linestyle='dashed', color='slategray')
+ax2.set_ylabel(r'$\sigma^{2}_{\mu}$')
+ax2.legend(frameon=False)
+ax3.plot(stim_ticks, v_variance_1[start_time:end_time], color='lightcoral', label=r'$\hat{\tau}_{1,r}=$'+str(int(stim_var_est_up_params_1[1]*0.1))+'ms,'+r'$\hat{\tau}_{1,d}=$'+str(int(stim_var_est_down_params_1[1]*0.1))+'ms')
+ax3.plot(stim_ticks, stim_v_variance_est_1, color='dimgrey', linestyle='dashed')
+ax3.axvline(x=stim_var_est_up_params_1[1]*0.1, linestyle='dashed', color='silver')
+ax3.axvline(x=(var_est_max_index_1-start_time+stim_var_est_down_params_1[1])*0.1, linestyle='dashed', color='slategray')
+ax3.plot(stim_ticks, v_variance_1h[start_time:end_time], color='orangered', label=r'$\hat{\tau}_{1,r}=$'+str(int(stim_var_est_up_params_1h[1]*0.1))+'ms,'+r'$\hat{\tau}_{1h,d}=$'+str(int(stim_var_est_down_params_1h[1]*0.1))+'ms')
+ax3.plot(stim_ticks, stim_v_variance_est_1h, color='dimgrey', linestyle='dashed')
+ax3.axvline(x=stim_var_est_up_params_1h[1]*0.1, linestyle='dashed', color='silver')
+ax3.axvline(x=(var_est_max_index_1h-start_time+stim_var_est_down_params_1h[1])*0.1, linestyle='dashed', color='slategray')
+ax3.plot(stim_ticks, v_variance_2[start_time:end_time], color='firebrick', label=r'$\hat{\tau}_{1,r}=$'+str(int(stim_var_est_up_params_2[1]*0.1))+'ms,'+r'$\hat{\tau}_{2,d}=$'+str(int(stim_var_est_down_params_2[1]*0.1))+'ms')
+ax3.plot(stim_ticks, stim_v_variance_est_2, color='dimgrey', linestyle='dashed')
+ax3.axvline(x=stim_var_est_up_params_2[1]*0.1, linestyle='dashed', color='silver')
+ax3.axvline(x=(var_est_max_index_2-start_time+stim_var_est_down_params_2[1])*0.1, linestyle='dashed', color='slategray')
+ax3.set_ylabel(r'$\langle (\alpha_{i}^{\mu})^{2} \sigma^{2}_{\hat{\mu}} \rangle_{i}$')
+ax3.legend(frameon=False)
+ax4.plot(stim_ticks, mu_grad_params_const_1_est[start_time:end_time], color='darkgray', label=r'$\hat{\tau}_{1,r}=$'+str(int(stim_v_variance_up_params_1[1]*0.1))+'ms,'+r'$\hat{\tau}_{1,d}=$'+str(int(stim_v_variance_down_params_1[1]*0.1))+'ms')
+ax4.plot(stim_ticks, stim_v_est_est_1, color='dimgrey', linestyle='dashed')
+ax4.axvline(x=stim_v_variance_up_params_1[1]*0.1, linestyle='dashed', color='silver')
+ax4.axvline(x=(v_variance_max_index_1-start_time+stim_v_variance_down_params_1[1])*0.1, linestyle='dashed', color='slategray')
+ax4.plot(stim_ticks, mu_grad_params_const_1h_est[start_time:end_time], color='grey', label=r'$\hat{\tau}_{1h,r}=$'+str(int(stim_v_variance_up_params_1h[1]*0.1))+'ms,'+r'$\hat{\tau}_{1h,d}=$'+str(int(stim_v_variance_down_params_1h[1]*0.1))+'ms')
+ax4.plot(stim_ticks, stim_v_est_est_1h, color='dimgrey', linestyle='dashed')
+ax4.axvline(x=stim_v_variance_up_params_1h[1]*0.1, linestyle='dashed', color='silver')
+ax4.axvline(x=(v_variance_max_index_1h-start_time+stim_v_variance_down_params_1h[1])*0.1, linestyle='dashed', color='slategray')
+ax4.plot(stim_ticks, mu_grad_params_const_2_est[start_time:end_time], color='dimgrey', label=r'$\hat{\tau}_{2,r}=$'+str(int(stim_v_variance_up_params_2[1]*0.1))+'ms,'+r'$\hat{\tau}_{2,d}=$'+str(int(stim_v_variance_down_params_2[1]*0.1))+'ms')
+ax4.plot(stim_ticks, stim_v_est_est_2, color='dimgrey', linestyle='dashed')
+ax4.axvline(x=stim_v_variance_up_params_2[1]*0.1, linestyle='dashed', color='silver')
+ax4.set_ylabel(r'$\sigma^{2}$')
+ax4.legend(frameon=False)
+ax4.set_xlabel('t [ms]')
+plt.tight_layout()
+fig3.savefig('network-weight-validate')
