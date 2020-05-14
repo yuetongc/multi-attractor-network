@@ -165,7 +165,7 @@ mu_term_var_params_const_est_adjusted_b = mu_term_var_params_const_est / pre_sca
 
 
 "Reconstruction Statistics"
-circular_precision_true_var = np.apply_along_axis(modelfit.circular_precision, 0, var)
+circular_precision_mu = np.apply_along_axis(modelfit.circular_precision, 0, mu)
 
 
 fig1, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(16, 16))
