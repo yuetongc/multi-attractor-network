@@ -102,10 +102,31 @@ def uniform_mu_integrand(x, a, mu, var, p):
     return (a**p) * np.exp(p * (np.cos((x - mu)) - 1.) / var) / (2 * math.pi)
 
 
-def exp_response(x, params):
-    a, tau = params
-    return a * (1 - np.exp(-x / tau))
+def exp_response_up(x, params):
+    a, tau, b = params
+    return a * (1 - np.exp(-x / tau)) + b
 
 
-def exp_response_mse(params, xdata, ydata):
-    return np.mean(np.power(ydata - exp_response(xdata, params), 2.))
+def exp_response_down(x, params):
+    a, tau, b = params
+    return a * np.exp(-x / tau) + b
+
+
+def exp_response_up_mse(params, xdata, ydata):
+    return np.mean(np.power(ydata - exp_response_up(xdata, params), 2.))
+
+
+def exp_response_down_mse(params, xdata, ydata):
+    return np.mean(np.power(ydata - exp_response_down(xdata, params), 2.))
+
+
+def two_part_exp_response(x, params, t_tr):
+    a_r, tau_r, b_r, tau_d, b_d = params
+    y = np.zeros(x.shape[0])
+    y[0:t_tr] += a_r*(1-np.exp(-x[0:t_tr]/tau_r)) + b_r
+    y[t_tr:] += (a_r*(1-np.exp(-t_tr/tau_r))+b_r-b_d)*np.exp(t_tr/tau_d)*np.exp(-x[t_tr:]/tau_d) + b_d
+    return y
+
+
+def two_part_exp_response_mse(params, xdata, ydata, t_tr):
+    return np.mean(np.power(ydata - two_part_exp_response(xdata, params, t_tr), 2.))
