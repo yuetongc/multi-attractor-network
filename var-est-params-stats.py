@@ -132,7 +132,7 @@ mu_var_term_avg = np.mean(mu_var_term, axis=0)
 mu_b_term_avg = np.mean(mu_b_term, axis=0)
 var_b_term_avg = np.mean(var_b_term, axis=0)
 
-exp_term = np.exp((np.cos(x_mtx - mu_mean_mtx) - 1) / var_mean_mtx)
+exp_term = np.exp((np.cos(x_mtx - np.mean(mu_mean_mtx)) - 1) / var_mean_mtx)
 sin_term = np.sin(x_mtx - mu_mean_mtx)
 mu_grad_estimate = a_mean_mtx * exp_term * sin_term / var_mean_mtx
 
@@ -196,4 +196,25 @@ ax4.set_xlabel('t [ms]')
 plt.tight_layout()
 fig3.savefig('parameter_var')
 
-
+fig5, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(10, 14))
+bottom, top = 0.1, 0.9
+left, right = 0.1, 0.85
+fig5.subplots_adjust(top=top, bottom=bottom, left=left, right=right, hspace=0.15, wspace=0.25)
+ax1.plot(t_tick, np.mean(np.square(mu_grad_estimate), axis=0), color='black')
+ax1.set_ylabel(r'$\langle (\alpha_{i}^{\mu})^{2} \rangle_{i}$')
+ax1.set_ylim(0, 3.5)
+ax1.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax2.plot(t_tick, np.mean(np.square(a_mean_mtx), axis=0), color='black')
+ax2.set_ylabel(r'$\bar{a}(t)^{2}$')
+ax2.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax3.plot(t_tick, np.mean(np.square(exp_term), axis=0), color='black')
+ax3.set_ylabel(r'$\langle (\exp(\frac{\sin(\theta - \bar{\mu}(t)) - 1}{\bar{w}^{2}}))^{2} \rangle_{i}$')
+ax3.set_ylim(0.4, 0.5)
+ax3.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax4.plot(t_tick, np.mean(np.square(sin_term), axis=0), color='black')
+ax4.set_ylabel(r'$\langle \sin^{2}(\theta - \bar{\mu}(t)) \rangle_{i}$')
+ax4.set_ylim(0.3, 0.7)
+ax4.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax4.set_xlabel('t [ms]')
+plt.tight_layout()
+fig5.savefig('Mu Parameter Coefficient')
