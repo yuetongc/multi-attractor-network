@@ -114,7 +114,7 @@ for k in range(N_trial):
     for i in range(n3):
         r2.append(modelfit.r_squared(V_matrix[:, i], est_matrix[:, i]))
 
-    if np.all(np.exp(p_matrix[2, :]) < 100) and np.all(p_matrix[0, :] > 0):
+    if np.all(np.exp(p_matrix[2, :]) < 20) and np.all(p_matrix[0, :] > 0):
         parameter_matrix[success_trial, :, :] = p_matrix
         data_matrix[success_trial, :, :] = V_matrix
         print("{}th simulation plotted".format(str(k+1)))
