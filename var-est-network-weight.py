@@ -293,7 +293,7 @@ line2 = ax1.scatter(network_weight, est_var_up_tau, s=40, label=r'$\alpha^{2}\si
 line3 = ax1.scatter(network_weight, coeff_tau, s=40, label=r'$\alpha^{2}$', marker='x', color='forestgreen')
 ax1.set_ylabel(r'$\tau_{r}\ [ms]$')
 ax1.set_xlabel(r'$k_{W}$')
-ax1.set_ylim([0, 200])
+ax1.set_ylim([0, 400])
 ax1.set_xticks(network_weight)
 ax1.spines['bottom'].set_visible(True)
 
@@ -303,7 +303,7 @@ line4 = ax2.scatter(network_weight, var_tau, s=40, label=r'$\sigma^{2}$', marker
 ax2.set_ylabel(r'$\tau_{d}\ [ms]$')
 ax2.set_xlabel(r'$k_{W}$')
 ax2.set_xticks(network_weight)
-ax2.set_ylim([0, 200])
+ax2.set_ylim([0, 400])
 ax2.spines['bottom'].set_visible(True)
 
 plt.legend(handles = [line1, line2, line3, line4], loc='best', fontsize=18)
