@@ -168,6 +168,23 @@ mu_term_var_params_const_est_adjusted_b = mu_term_var_params_const_est / pre_sca
 circular_precision_mu = np.apply_along_axis(modelfit.circular_precision, 0, mu)
 
 
+fig0, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 8))
+ax1.plot(t_tick, np.mean(np.square(mu_grad_params_const), axis=0)*mu_var, color='dimgrey', label='assumption 1+2a+3')
+ax1.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax1.set_ylim(0, 3.2)
+ax1.set_ylabel(r'$\langle (\alpha_{i}^{\mu})^{2} \rangle_{i} \ \sigma^{2}_{\hat{\mu}}$')
+ax2.plot(t_tick, np.mean(np.square(mu_grad_params_const), axis=0), color='dimgrey')
+ax2.set_ylabel(r'$\langle (\alpha_{i}^{\mu})^{2} \rangle_{i}$')
+ax2.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax2.set_ylim([0,3.5])
+ax3.plot(t_tick, mu_var, color='dimgrey')
+ax3.set_ylabel(r'$\sigma^{2}_{\hat{\mu}}$')
+ax3.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax3.set_xlabel('t [ms]')
+plt.tight_layout()
+fig0.savefig('assumption_1_2a_3')
+
+
 fig1, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(16, 16))
 ax1.plot(t_tick, v_var_mean, color='dimgrey', label='true')
 ax1.plot(t_tick, mu_variability_est, color='firebrick', label='assumption 1')
@@ -176,15 +193,15 @@ ax1.plot(t_tick, mu_term_var_params_const_est+0.025, color='limegreen', label='a
 ax1.plot(t_tick, uniform_mu_var_params_const_est+0.025, color='royalblue', label='assumption 1+2b+3')
 ax1.plot(t_tick, mu_term_var_est, color='seagreen', linewidth=2, linestyle='dashed', label='assumption 1+2a')
 ax1.plot(t_tick, uniform_mu_var_est, color='mediumblue', linewidth=2, linestyle='dashed', label='assumption 1+2b')
-ax1.plot(t_tick, mu_term_var_params_const_est_adjusted_b, color='darkgreen', label='assumption 1+2a+3 (adjusted)')
+"ax1.plot(t_tick, mu_term_var_params_const_est_adjusted_b, color='darkgreen', label='assumption 1+2a+3 (adjusted)')"
 ax1.axvspan(t1, t2, alpha=0.5, color='lightgrey')
 ax1.set_ylim(0, 3.2)
 ax1.set_ylabel(r'${\hat{\sigma}^{2}}$')
 handles,labels = ax1.get_legend_handles_labels()
-handles = [handles[0], handles[1], handles[2], handles[5], handles[3], handles[7], handles[6], handles[4]]
-labels = [labels[0], labels[1], labels[2], labels[5], labels[3], labels[7], labels[6], labels[4]]
+handles = [handles[0], handles[1], handles[2], handles[4], handles[3], handles[6], handles[5]]
+labels = [labels[0], labels[1], labels[2], labels[4], labels[3], labels[6], labels[5]]
 ax1.legend(handles, labels, frameon=False, loc='upper right')
-ax2.plot(t_tick, circular_precision_true_var, color='dimgrey')
+ax2.plot(t_tick, circular_precision_mu, color='dimgrey')
 ax2.set_ylabel(r'$\rho_{\hat{\mu}}$')
 ax2.axvspan(t1, t2, alpha=0.5, color='lightgrey')
 ax3.plot(t_tick, a_mean, color='dimgrey')
@@ -192,7 +209,28 @@ ax3.set_ylabel(r'$\bar{a} [mV]$')
 ax3.axvspan(t1, t2, alpha=0.5, color='lightgrey')
 ax3.set_xlabel('t [ms]')
 plt.tight_layout()
-fig1.savefig('var_reconstruction')
+fig1.savefig('var_reconstruction_params')
+
+
+fig3, ax = plt.subplots(figsize=(16, 5.3))
+ax.plot(t_tick, v_var_mean, color='dimgrey', label='true')
+ax.plot(t_tick, mu_variability_est, color='firebrick', label='assumption 1')
+ax.plot(t_tick, first_order_var_est, color='orange', label='assumption 2a')
+ax.plot(t_tick, mu_term_var_params_const_est+0.025, color='limegreen', label='assumption 1+2a+3')
+ax.plot(t_tick, uniform_mu_var_params_const_est+0.025, color='royalblue', label='assumption 1+2b+3')
+ax.plot(t_tick, mu_term_var_est, color='seagreen', linewidth=2, linestyle='dashed', label='assumption 1+2a')
+ax.plot(t_tick, uniform_mu_var_est, color='mediumblue', linewidth=2, linestyle='dashed', label='assumption 1+2b')
+"ax1.plot(t_tick, mu_term_var_params_const_est_adjusted_b, color='darkgreen', label='assumption 1+2a+3 (adjusted)')"
+ax.axvspan(t1, t2, alpha=0.5, color='lightgrey')
+ax.set_ylim(0, 3.2)
+ax.set_ylabel(r'${\hat{\sigma}^{2}}\ [mV]$')
+ax.set_xlabel('t [ms]')
+handles,labels = ax1.get_legend_handles_labels()
+handles = [handles[0], handles[1], handles[2], handles[4], handles[3], handles[6], handles[5]]
+labels = [labels[0], labels[1], labels[2], labels[4], labels[3], labels[6], labels[5]]
+ax.legend(handles, labels, frameon=False, loc='upper right')
+plt.tight_layout()
+fig3.savefig('var_reconstruction')
 
 
 von_mises_k_0_var_est_df = pd.read_csv('von_mises_k_0_var_est.csv', index_col=False)
