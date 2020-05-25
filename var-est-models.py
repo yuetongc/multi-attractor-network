@@ -213,7 +213,7 @@ fig1.savefig('var_reconstruction_params')
 
 
 fig3, ax = plt.subplots(figsize=(16, 5.3))
-ax.plot(t_tick, v_var_mean, color='dimgrey', label='true')
+ax.plot(t_tick, v_var_mean, color='dimgrey', label='true', linewidth=3)
 ax.plot(t_tick, mu_variability_est, color='firebrick', label='assumption 1')
 ax.plot(t_tick, first_order_var_est, color='orange', label='assumption 2a')
 ax.plot(t_tick, mu_term_var_params_const_est+0.025, color='limegreen', label='assumption 1+2a+3')
@@ -226,8 +226,8 @@ ax.set_ylim(0, 3.2)
 ax.set_ylabel(r'${\hat{\sigma}^{2}}\ [mV]$')
 ax.set_xlabel('t [ms]')
 handles,labels = ax1.get_legend_handles_labels()
-handles = [handles[0], handles[1], handles[2], handles[4], handles[3], handles[6], handles[5]]
-labels = [labels[0], labels[1], labels[2], labels[4], labels[3], labels[6], labels[5]]
+handles = [handles[0], handles[1], handles[2], handles[5], handles[6], handles[3], handles[4]]
+labels = [labels[0], labels[1], labels[2], labels[5], labels[6], labels[3], labels[4]]
 ax.legend(handles, labels, frameon=False, loc='upper right')
 plt.tight_layout()
 fig3.savefig('var_reconstruction')
